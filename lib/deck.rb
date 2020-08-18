@@ -10,7 +10,6 @@ class Deck
   end
 
   def high_ranking_cards
-    # this method will return an array of cards in the deck that have a rank of 11 or above (face cards and aces)
     @cards.select do |card|
       card.rank >= 11
     end
@@ -21,12 +20,10 @@ class Deck
   end
 
   def remove_card
-    # this method will remove the top card from the deck
     @cards.shift
   end
 
   def add_card(card)
-    # this method will add one card to the bottom (end) of the deck
     @cards << card
   end
 end
