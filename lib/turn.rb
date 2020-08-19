@@ -19,11 +19,17 @@ class Turn
 
   def winner
     if self.type == :basic
-      return @player1 if @player1.deck.rank_of_card_at(0) > @player2.deck.rank_of_card_at(0)
-      return @player2 if @player1.deck.rank_of_card_at(0) < @player2.deck.rank_of_card_at(0)
+      if @player1.deck.rank_of_card_at(0) > @player2.deck.rank_of_card_at(0)
+        return @player1
+      else
+        return @player2
+      end
     elsif self.type == :war
-      return @player1 if @player1.deck.rank_of_card_at(2) > @player2.deck.rank_of_card_at(2)
-      return @player2 if @player1.deck.rank_of_card_at(2) < @player2.deck.rank_of_card_at(2)
+      if @player1.deck.rank_of_card_at(2) > @player2.deck.rank_of_card_at(2)
+        return @player1
+      else
+        return @player2
+      end
     else
       return "No Winner"
     end
