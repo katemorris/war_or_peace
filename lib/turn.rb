@@ -8,7 +8,7 @@ class Turn
   end
 
   def type
-    if @player1.deck.rank_of_card_at(0) != @player2.deck.rank_of_card_at(0) && @player1.deck.rank_of_card_at(2) == @player2.deck.rank_of_card_at(2)
+    if @player1.deck.rank_of_card_at(0) == @player2.deck.rank_of_card_at(0) && @player1.deck.rank_of_card_at(2) == @player2.deck.rank_of_card_at(2)
       return :mutually_assured_destruction
     elsif @player1.deck.rank_of_card_at(0) != @player2.deck.rank_of_card_at(0)
       return :basic
@@ -43,8 +43,8 @@ class Turn
   end
 
   def award_spoils(winner)
-    self.spoils_of_war.each do |card|
-      self.winner.deck << card
+    @spoils_of_war.each do |card|
+      winner.deck.cards << card
     end
   end
 end
