@@ -8,13 +8,13 @@ class Turn
   end
 
   def type
-    card1a = @player1.deck.rank_of_card_at(0)
-    card2a = @player2.deck.rank_of_card_at(0)
-    card1b = @player1.deck.rank_of_card_at(2)
-    card2b = @player2.deck.rank_of_card_at(2)
-    if card1a == card2a && card1b == card2b
+    player1_card1 = @player1.deck.rank_of_card_at(0)
+    player2_card1 = @player2.deck.rank_of_card_at(0)
+    player1_card3 = @player1.deck.rank_of_card_at(2)
+    player2_card3 = @player2.deck.rank_of_card_at(2)
+    if player1_card1 == player2_card1 && player1_card3 == player2_card3
       return :mutually_assured_destruction
-    elsif card1a != card2a
+    elsif player1_card1 != player2_card1
       return :basic
     else
       return :war
