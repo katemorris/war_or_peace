@@ -103,7 +103,7 @@ class TurnTest < Minitest::Test
 
     turn.pile_cards
     refute_equal [], turn.spoils_of_war
-
+    # require "pry"; binding.pry
     turn.award_spoils(winner)
     assert_equal 1, player1.deck.cards.count
     assert_equal 7, player2.deck.cards.count

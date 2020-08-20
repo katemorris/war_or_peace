@@ -2,6 +2,7 @@ require './lib/card'
 require './lib/deck'
 require './lib/player'
 require './lib/turn'
+require './lib/game'
 
 # Create 52 Cards (A standard deck)
 card1 = Card.new(:heart, '2', 2)
@@ -79,7 +80,7 @@ player1 = Player.new("Kate", deck1)
 player2 = Player.new("Caryn", deck2)
 # require "pry"; binding.pry
 
-puts "Welcome to War! (or Peace) This game will be played with #{card_deck.count} cards."
+puts "Welcome to War! (or Peace) This game will be played with #{deck1.cards.count+deck2.cards.count} cards."
 puts "The players today are #{player1.name} and #{player2.name}."
 puts "Type 'GO' to start the game!"
 ready = $stdin.gets.chomp
@@ -87,7 +88,7 @@ ready = $stdin.gets.chomp
 # Go Time
 if ready == "GO" || ready == "go" || ready == "Go"
   game = Game.new
-  game.start
+  game.start(player1, player2)
 else
   puts "You don't wanna play my game? :( "
   exit(0)
