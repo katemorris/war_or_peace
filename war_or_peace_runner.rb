@@ -102,19 +102,22 @@ if ready.upcase == "GO"
       puts "Turn #{game.turn_count}: WAR - #{winner.name} won 6 cards."
       turn.pile_cards
       turn.award_spoils(winner)
-    else
+    elsif turn.type == :mutually_assured_destruction
       puts "Turn #{game.turn_count}: *mutually assured destruction* 6 cards removed from play"
+    else
+      if game.stop_game?(player1, player2) == true && player1.has_lost? == true
+        puts "*~*~*~* #{player2.name} has won the game! *~*~*~*"
+        exit(0)
+      else
+        puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
+        exit(0)
+      end
     end
   end
-  if game.stop_game?(player1, player2) == true && player1.has_lost? == true
-    puts "*~*~*~* #{player2.name} has won the game! *~*~*~*"
-  elsif game.turn_count = 1000000
+  if game.turn_count = 1000000
     puts "---- DRAW ----"
     exit(0)
-  else
-    puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
   end
-
 else
   puts "You don't wanna play my game? :( "
   exit(0)

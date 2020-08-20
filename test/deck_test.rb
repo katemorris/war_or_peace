@@ -34,6 +34,7 @@ class DeckTest < Minitest::Test
     deck = Deck.new(cards)
 
     # should I always check the entire value or can I test the number?
+    # update to check the cards in case the code was wrong and was less than
     assert_equal 2, deck.high_ranking_cards.count
     assert_equal 66.67, deck.percent_high_ranking
   end
