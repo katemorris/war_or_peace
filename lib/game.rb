@@ -5,11 +5,15 @@ class Game
     @turn_count = 0
   end
 
+  def stop_game?(player1, player2)
+    player1.has_lost? == true || player2.has_lost? == true
+  end
 
   def start(player1, player2)
-    if turn_count < 1000000 && self.stop_game == false
+
+    if turn_count < 1000000 && self.stop_game?(player1, player2) == false
       turn = Turn.new(player1, player2)
-      turn_count += 1
+      @turn_count += 1
       if self.turn.type == :basic
         puts "Turn #{turn_count}: #{self.turn.winner} won 2 cards."
         self.turn.pile_cards
@@ -21,7 +25,7 @@ class Game
       else
         puts "Turn #{turn_count}: *mutually assured destruction* 6 cards removed from play"
       end
-    elsif self.stop_game == true
+    elsif self.stop_game?(player1, player2) == true
       if player1.has_lost? == true
         puts "*~*~*~* #{player2.name has won the game!} *~*~*~*"
       else
@@ -33,7 +37,5 @@ class Game
     end
   end
 
-  def stop_game
-    player1.has_lost? == true || player2.has_lost? == true
-  end
+
 end

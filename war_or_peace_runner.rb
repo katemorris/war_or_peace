@@ -78,7 +78,7 @@ deck2 = Deck.new(deck_two)
 # Create two players with the Decks you created
 player1 = Player.new("Kate", deck1)
 player2 = Player.new("Caryn", deck2)
-# require "pry"; binding.pry
+
 
 puts "Welcome to War! (or Peace) This game will be played with #{deck1.cards.count+deck2.cards.count} cards."
 puts "The players today are #{player1.name} and #{player2.name}."
@@ -86,8 +86,9 @@ puts "Type 'GO' to start the game!"
 ready = $stdin.gets.chomp
 
 # Go Time
-if ready == "GO" || ready == "go" || ready == "Go"
+if ready.upcase == "GO"
   game = Game.new
+  # require "pry"; binding.pry
   game.start(player1, player2)
 else
   puts "You don't wanna play my game? :( "
