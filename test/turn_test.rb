@@ -105,8 +105,8 @@ class TurnTest < Minitest::Test
     refute_equal [], turn.spoils_of_war
 
     turn.award_spoils(winner)
-    assert_equal 1, player1.deck.cards.flatten.count
-    assert_equal 7, player2.deck.cards.flatten.count
+    assert_equal 1, player1.deck.cards.count
+    assert_equal 7, player2.deck.cards.count
   end
 
   def test_mutually_assured_destruction
