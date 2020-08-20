@@ -159,7 +159,6 @@ class TurnTest < Minitest::Test
     turn = Turn.new(player1, player2)
     turn.pile_cards
     turn2 = Turn.new(player1, player2)
-    require "pry"; binding.pry
     winner = turn2.winner
     turn2.pile_cards
     turn2.award_spoils(winner)
