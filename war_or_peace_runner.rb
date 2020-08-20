@@ -88,31 +88,33 @@ ready = $stdin.gets.chomp
 # Go Time
 if ready.upcase == "GO"
   game = Game.new
-  game.start(player1, player2)
+  game.start
+
   while game.turn_count < 1000000 && game.stop_game?(player1, player2) == false
     turn = Turn.new(player1, player2)
-    @turn_count += 1
-    if game.turn.type == :basic
-      puts "Turn #{turn_count}: #{game.turn.winner} won 2 cards."
-      game.turn.pile_cards
-      game.turn.award_spoils(game.turn.winner)
-    elsif game.turn.type == :war
-      puts "Turn #{turn_count}: WAR - #{game.turn.winner} won 6 cards."
-      game.turn.pile_cards
-      game.turn.award_spoils(game.turn.winner)
+    game.turn_count += 1
+    winner = turn.winner
+    if turn.type == :basic
+      puts "Turn #{game.turn_count}: #{winner.name} won 2 cards."
+      turn.pile_cards
+      turn.award_spoils(winner)
+    elsif turn.type == :war
+      puts "Turn #{game.turn_count}: WAR - #{winner.name} won 6 cards."
+      turn.pile_cards
+      turn.award_spoils(winner)
     else
-      puts "Turn #{turn_count}: *mutually assured destruction* 6 cards removed from play"
+      puts "Turn #{game.turn_count}: *mutually assured destruction* 6 cards removed from play"
     end
-  elsif game.stop_game?(player1, player2) == true
-    if player1.has_lost? == true
-      puts "*~*~*~* #{player2.name has won the game!} *~*~*~*"
-    else
-      puts "*~*~*~* #{player1.name has won the game!} *~*~*~*"
-    end
-  else
+  end
+  if game.stop_game?(player1, player2) == true && player1.has_lost? == true
+    puts "*~*~*~* #{player2.name} has won the game! *~*~*~*"
+  elsif game.turn_count = 1000000
     puts "---- DRAW ----"
     exit(0)
+  else
+    puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
   end
+
 else
   puts "You don't wanna play my game? :( "
   exit(0)

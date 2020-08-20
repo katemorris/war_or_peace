@@ -9,7 +9,7 @@ class Game
     player1.has_lost? == true || player2.has_lost? == true
   end
 
-  def start(player1, player2)
+  def start
     @turn_count = 0
   end
 
