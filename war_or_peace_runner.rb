@@ -78,7 +78,7 @@ deck2 = Deck.new(deck_two)
 # Create two players with the Decks you created
 player1 = Player.new("Kate", deck1)
 player2 = Player.new("Caryn", deck2)
-# require "pry"; binding.pry
+
 
 puts "Welcome to War! (or Peace) This game will be played with #{deck1.cards.count+deck2.cards.count} cards."
 puts "The players today are #{player1.name} and #{player2.name}."
@@ -86,9 +86,35 @@ puts "Type 'GO' to start the game!"
 ready = $stdin.gets.chomp
 
 # Go Time
-if ready == "GO" || ready == "go" || ready == "Go"
+if ready.upcase == "GO"
   game = Game.new
-  game.start(player1, player2)
+  game.start
+
+  while game.turn_count < 1000000 && game.stop_game?(player1, player2) == false
+    turn = Turn.new(player1, player2)
+    game.turn_count += 1
+    winner = turn.winner
+    if turn.type == :basic
+      puts "Turn #{game.turn_count}: #{winner.name} won 2 cards."
+      turn.pile_cards
+      turn.award_spoils(winner)
+    elsif turn.type == :war
+      puts "Turn #{game.turn_count}: WAR - #{winner.name} won 6 cards."
+      turn.pile_cards
+      turn.award_spoils(winner)
+    else
+      puts "Turn #{game.turn_count}: *mutually assured destruction* 6 cards removed from play"
+    end
+  end
+  if game.stop_game?(player1, player2) == true && player1.has_lost? == true
+    puts "*~*~*~* #{player2.name} has won the game! *~*~*~*"
+  elsif game.turn_count = 1000000
+    puts "---- DRAW ----"
+    exit(0)
+  else
+    puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
+  end
+
 else
   puts "You don't wanna play my game? :( "
   exit(0)
