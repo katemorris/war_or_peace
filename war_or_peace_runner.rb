@@ -65,15 +65,15 @@ card_deck = Deck.new([card1, card2, card3, card4, card5, card6, card7, card8, ca
 deck_one = []
 deck_two = []
 26.times do
-  selected_card_one = card_deck.cards.sample
+  selected_card_one = card_deck.cards.shuffle.sample
   deck_one << selected_card_one
   card_deck.cards.delete(selected_card_one)
-  selected_card_two = card_deck.cards.sample
+  selected_card_two = card_deck.cards.shuffle.sample
   deck_two << selected_card_two
   card_deck.cards.delete(selected_card_two)
 end
-deck1 = Deck.new(deck_one)
-deck2 = Deck.new(deck_two)
+deck1 = Deck.new(deck_one.shuffle)
+deck2 = Deck.new(deck_two.shuffle)
 
 # Create two players with the Decks you created
 player1 = Player.new("Kate", deck1)
@@ -94,6 +94,7 @@ if ready.upcase == "GO"
     turn = Turn.new(player1, player2)
     game.turn_count += 1
     winner = turn.winner
+    require "pry"; binding.pry 
     if turn.type == :basic
       puts "Turn #{game.turn_count}: #{winner.name} won 2 cards."
       turn.pile_cards
@@ -102,19 +103,22 @@ if ready.upcase == "GO"
       puts "Turn #{game.turn_count}: WAR - #{winner.name} won 6 cards."
       turn.pile_cards
       turn.award_spoils(winner)
-    else
+    elsif turn.type == :mutually_assured_destruction
       puts "Turn #{game.turn_count}: *mutually assured destruction* 6 cards removed from play"
+    else
+      if game.stop_game?(player1, player2) == true && player1.has_lost? == true
+        puts "*~*~*~* #{player2.name} has won the game! *~*~*~*"
+        exit(0)
+      else
+        puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
+        exit(0)
+      end
     end
   end
-  if game.stop_game?(player1, player2) == true && player1.has_lost? == true
-    puts "*~*~*~* #{player2.name} has won the game! *~*~*~*"
-  elsif game.turn_count = 1000000
+  if game.turn_count = 1000000
     puts "---- DRAW ----"
     exit(0)
-  else
-    puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
   end
-
 else
   puts "You don't wanna play my game? :( "
   exit(0)
