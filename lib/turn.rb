@@ -4,7 +4,7 @@ class Turn
   def initialize(player1, player2)
     @player1 = player1
     @player2 = player2
-    @players = [player1, player2]
+    @players = [@player1, @player2]
     @spoils_of_war = []
   end
 
@@ -35,11 +35,11 @@ class Turn
   def winner
     if self.type == :basic
       @players.max_by do |player|
-        player..deck.rank_of_card_at(0)
+        player.deck.rank_of_card_at(0)
       end
     elsif self.type == :war
       @players.max_by do |player|
-        player..deck.rank_of_card_at(2)
+        player.deck.rank_of_card_at(2)
       end
     else
       return "No Winner"
@@ -47,21 +47,26 @@ class Turn
   end
 
   def pile_cards
+    player1_remove = player1.deck.remove_card
+    player2_remove = player2.deck.remove_card
     if self.type == :basic
-      @spoils_of_war << player1.deck.remove_card
-      @spoils_of_war << player2.deck.remove_card
+      @spoils_of_war.push(player1_remove, player2_remove)
     elsif self.type == :war
-      3.times { @spoils_of_war << player1.deck.remove_card}
-      3.times { @spoils_of_war << player2.deck.remove_card}
+      3.times do
+        @spoils_of_war.push(player1_remove, player2_remove)
+      end
     elsif self.type == :mutually_assured_destruction
-      3.times {player1.deck.remove_card}
-      3.times {player2.deck.remove_card}
+      3.times do
+        @player1.deck.remove_card
+        @player2.deck.remove_card
+      end
     else
       lowest_player = @players.min_by do |player|
         player.deck.cards.count
       end
       lowest_player.deck.remove_card until lowest_player.deck.cards.count == 0
       #remove cards from lowest deck player until they get to zero
+      # add test for this!
     end
   end
 
