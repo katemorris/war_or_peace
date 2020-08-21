@@ -34,16 +34,12 @@ class Turn
 
   def winner
     if self.type == :basic
-      if @player1.deck.rank_of_card_at(0) > @player2.deck.rank_of_card_at(0)
-        return @player1
-      else
-        return @player2
+      @players.max_by do |player|
+        player..deck.rank_of_card_at(0)
       end
     elsif self.type == :war
-      if @player1.deck.rank_of_card_at(2) > @player2.deck.rank_of_card_at(2)
-        return @player1
-      else
-        return @player2
+      @players.max_by do |player|
+        player..deck.rank_of_card_at(2)
       end
     else
       return "No Winner"
