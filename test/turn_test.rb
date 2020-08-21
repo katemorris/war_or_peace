@@ -76,13 +76,12 @@ class TurnTest < Minitest::Test
     assert_equal "Aurora", winner.name
 
     assert_equal [], turn.spoils_of_war
-    require "pry"; binding.pry
     turn.pile_cards
-    assert_equal 6, turn.spoils_of_war.count
+    assert_equal [card1, card4, card2, card3, card5, card6], turn.spoils_of_war
 
     turn.award_spoils(winner)
     player1_deck = [card8]
-    player2_deck = [card7, card1, card2, card5, card4, card3, card6]
+    player2_deck = [card7, card1, card4, card2, card3, card5, card6]
 
     assert_equal player1_deck, player1.deck.cards
     assert_equal player2_deck, player2.deck.cards
@@ -137,9 +136,20 @@ class TurnTest < Minitest::Test
 
     turn = Turn.new(player1, player2)
     turn.pile_cards
+    assert_equal [], turn.spoils_of_war
+
     turn2 = Turn.new(player1, player2)
+
+    assert_equal [card8], player1.deck.cards
+    assert_equal [card7], player2.deck.cards
+    assert_equal :no_cards, turn.type
+
     winner = turn2.winner
+    assert_equal "No Winner", turn.winner
+
     turn2.pile_cards
     turn2.award_spoils(winner)
+
+
   end
 end

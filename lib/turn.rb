@@ -47,13 +47,11 @@ class Turn
   end
 
   def pile_cards
-    player1_remove = player1.deck.remove_card
-    player2_remove = player2.deck.remove_card
     if self.type == :basic
-      @spoils_of_war.push(player1_remove, player2_remove)
+      @spoils_of_war.push(@player1.deck.remove_card, @player2.deck.remove_card)
     elsif self.type == :war
       3.times do
-        @spoils_of_war.push(player1_remove, player2_remove)
+        @spoils_of_war.push(@player1.deck.remove_card, @player2.deck.remove_card)
       end
     elsif self.type == :mutually_assured_destruction
       3.times do
@@ -61,12 +59,14 @@ class Turn
         @player2.deck.remove_card
       end
     else
+    require "pry"; binding.pry
       lowest_player = @players.min_by do |player|
         player.deck.cards.count
       end
       lowest_player.deck.remove_card until lowest_player.deck.cards.count == 0
       #remove cards from lowest deck player until they get to zero
       # add test for this!
+      # This is a draw in my test! What happens if the last cards are equal?
     end
   end
 
