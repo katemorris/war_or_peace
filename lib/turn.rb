@@ -9,9 +9,9 @@ class Turn
   end
 
   def type
-    player1_card1 = @player1.deck.rank_of_card_at(0)
-    player2_card1 = @player2.deck.rank_of_card_at(0)
-    if @players.all? {|player| player.deck.cards.count >= 3}
+    if @players.all? { |player| player.deck.cards.count >= 3 }
+      player1_card1 = @player1.deck.rank_of_card_at(0)
+      player2_card1 = @player2.deck.rank_of_card_at(0)
       player1_card3 = @player1.deck.rank_of_card_at(2)
       player2_card3 = @player2.deck.rank_of_card_at(2)
       if player1_card1 == player2_card1 && player1_card3 == player2_card3
@@ -21,7 +21,7 @@ class Turn
       else
         return :war
       end
-    elsif @players.all? {|player| player.deck.cards.count >= 1}
+    elsif @players.any? {|player| player.deck.cards.count >= 1}
       if player1_card1 != player2_card1
         return :basic
       else
@@ -59,20 +59,20 @@ class Turn
         @player2.deck.remove_card
       end
     else
-    require "pry"; binding.pry
-      lowest_player = @players.min_by do |player|
-        player.deck.cards.count
+      if @player1.deck.cards.count == @player2.deck.cards.count
+        return "It's a DRAW!"
+      else @player1.deck.rank_of_card_at(0) == @player2.deck.rank_of_card_at(0)
+        lowest_player = @players.min_by do |player|
+          player.deck.cards.count
+        end
+        lowest_player.deck.cards.count.times { lowest_player.deck.remove_card }
       end
-      lowest_player.deck.remove_card until lowest_player.deck.cards.count == 0
-      #remove cards from lowest deck player until they get to zero
-      # add test for this!
-      # This is a draw in my test! What happens if the last cards are equal?
     end
   end
 
   def award_spoils(winner)
     if winner == "No Winner"
-      puts "No cards to award!"
+      return "No cards to award!"
     else
       @spoils_of_war.each do |card|
         winner.deck.cards << card

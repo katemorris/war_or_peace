@@ -94,7 +94,6 @@ if ready.upcase == "GO"
     turn = Turn.new(player1, player2)
     game.turn_count += 1
     winner = turn.winner
-    require "pry"; binding.pry 
     if turn.type == :basic
       puts "Turn #{game.turn_count}: #{winner.name} won 2 cards."
       turn.pile_cards
@@ -105,12 +104,17 @@ if ready.upcase == "GO"
       turn.award_spoils(winner)
     elsif turn.type == :mutually_assured_destruction
       puts "Turn #{game.turn_count}: *mutually assured destruction* 6 cards removed from play"
+      turn.pile_cards
     else
       if game.stop_game?(player1, player2) == true && player1.has_lost? == true
         puts "*~*~*~* #{player2.name} has won the game! *~*~*~*"
         exit(0)
-      else
+      elsif game.stop_game?(player1, player2) == true && player2.has_lost? == true
         puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
+        exit(0)
+      else
+        require "pry"; binding.pry
+        pp "Something went wrong"
         exit(0)
       end
     end
