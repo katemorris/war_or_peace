@@ -4,56 +4,45 @@ require './lib/card'
 require './lib/deck'
 
 class DeckTest < Minitest::Test
-  def test_setup
-    card1 = Card.new(:diamond, 'Queen', 12)
-    card2 = Card.new(:spade, '3', 3)
-    card3 = Card.new(:heart, 'Ace', 14)
-    cards = [card1, card2, card3]
-    deck = Deck.new(cards)
+  def setup
+    @card1 = Card.new(:diamond, 'Queen', 12)
+    @card2 = Card.new(:spade, '3', 3)
+    @card3 = Card.new(:heart, 'Ace', 14)
+    @cards = [@card1, @card2, @card3]
+    @deck = Deck.new(@cards)
+  end
 
-    assert_instance_of Deck, deck
-    assert_equal cards, deck.cards
+  def test_it_exists
+    assert_instance_of Deck, @deck
+    assert_equal @cards, @deck.cards
   end
 
   def test_rank_of_cards
-    card1 = Card.new(:diamond, 'Queen', 12)
-    card2 = Card.new(:spade, '3', 3)
-    card3 = Card.new(:heart, 'Ace', 14)
-    cards = [card1, card2, card3]
-    deck = Deck.new(cards)
-
-    assert_equal 12, deck.rank_of_card_at(0)
-    assert_equal 14, deck.rank_of_card_at(2)
+    assert_equal 12, @deck.rank_of_card_at(0)
+    assert_equal 14, @deck.rank_of_card_at(2)
   end
 
   def test_percent_high_ranking_cards
-    card1 = Card.new(:diamond, 'Queen', 12)
-    card2 = Card.new(:spade, '3', 3)
-    card3 = Card.new(:heart, 'Ace', 14)
-    cards = [card1, card2, card3]
-    deck = Deck.new(cards)
-
-    # should I always check the entire value or can I test the number?
-    # update to check the cards in case the code was wrong and was less than
-    assert_equal 2, deck.high_ranking_cards.count
-    assert_equal 66.67, deck.percent_high_ranking
+    assert_equal [@card1, @card3], @deck.high_ranking_cards
+    assert_equal 66.67, @deck.percent_high_ranking
   end
 
-  def test_remove_add_card_and_high_ranking_impact
-    card1 = Card.new(:diamond, 'Queen', 12)
-    card2 = Card.new(:spade, '3', 3)
-    card3 = Card.new(:heart, 'Ace', 14)
-    cards = [card1, card2, card3]
-    deck = Deck.new(cards)
-    deck.remove_card
+  def test_remove_card_and_impact
+    @deck.remove_card
 
-    assert_equal 1, deck.high_ranking_cards.count
-    assert_equal 50.0, deck.percent_high_ranking
+    assert_equal [@card2, @card3], @deck.cards
+    assert_equal [@card3], @deck.high_ranking_cards
+    assert_equal 50.0, @deck.percent_high_ranking
+  end
 
+  def test_add_card_and_impact
+    @deck.remove_card
     card4 = Card.new(:club, '5', 5)
-    deck.add_card(card4)
+    @deck.add_card(card4)
 
-    assert_equal 1, deck.high_ranking_cards.count
-    assert_equal 33.33, deck.percent_high_ranking
+    assert_equal [@card2, @card3, card4], @deck.cards
+    assert_equal [@card3], @deck.high_ranking_cards
+    assert_equal 33.33, @deck.percent_high_ranking
   end
+
 end

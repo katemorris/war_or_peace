@@ -4,14 +4,14 @@ class Turn
   def initialize(player1, player2)
     @player1 = player1
     @player2 = player2
-    @players = [player1, player2]
+    @players = [@player1, @player2]
     @spoils_of_war = []
   end
 
   def type
-    player1_card1 = @player1.deck.rank_of_card_at(0)
-    player2_card1 = @player2.deck.rank_of_card_at(0)
-    if @players.all? {|player| player.deck.cards.count >= 3}
+    if @players.all? { |player| player.deck.cards.count >= 3 }
+      player1_card1 = @player1.deck.rank_of_card_at(0)
+      player2_card1 = @player2.deck.rank_of_card_at(0)
       player1_card3 = @player1.deck.rank_of_card_at(2)
       player2_card3 = @player2.deck.rank_of_card_at(2)
       if player1_card1 == player2_card1 && player1_card3 == player2_card3
@@ -21,7 +21,9 @@ class Turn
       else
         return :war
       end
-    elsif @players.all? {|player| player.deck.cards.count >= 1}
+    elsif @players.any? {|player| player.deck.cards.count >= 1}
+      player1_card1 = @player1.deck.rank_of_card_at(0)
+      player2_card1 = @player2.deck.rank_of_card_at(0)
       if player1_card1 != player2_card1
         return :basic
       else
@@ -34,16 +36,12 @@ class Turn
 
   def winner
     if self.type == :basic
-      if @player1.deck.rank_of_card_at(0) > @player2.deck.rank_of_card_at(0)
-        return @player1
-      else
-        return @player2
+      @players.max_by do |player|
+        player.deck.rank_of_card_at(0)
       end
     elsif self.type == :war
-      if @player1.deck.rank_of_card_at(2) > @player2.deck.rank_of_card_at(2)
-        return @player1
-      else
-        return @player2
+      @players.max_by do |player|
+        player.deck.rank_of_card_at(2)
       end
     else
       return "No Winner"
@@ -52,26 +50,31 @@ class Turn
 
   def pile_cards
     if self.type == :basic
-      @spoils_of_war << player1.deck.remove_card
-      @spoils_of_war << player2.deck.remove_card
+      @spoils_of_war.push(@player1.deck.remove_card, @player2.deck.remove_card)
     elsif self.type == :war
-      3.times { @spoils_of_war << player1.deck.remove_card}
-      3.times { @spoils_of_war << player2.deck.remove_card}
-    elsif self.type == :mutually_assured_destruction
-      3.times {player1.deck.remove_card}
-      3.times {player2.deck.remove_card}
-    else
-      lowest_player = @players.min_by do |player|
-        player.deck.cards.count
+      3.times do
+        @spoils_of_war.push(@player1.deck.remove_card, @player2.deck.remove_card)
       end
-      lowest_player.deck.remove_card until lowest_player.deck.cards.count == 0
-      #remove cards from lowest deck player until they get to zero
+    elsif self.type == :mutually_assured_destruction
+      3.times do
+        @player1.deck.remove_card
+        @player2.deck.remove_card
+      end
+    else
+      if @player1.deck.cards.count == @player2.deck.cards.count
+        return "It's a DRAW!"
+      else @player1.deck.rank_of_card_at(0) == @player2.deck.rank_of_card_at(0)
+        lowest_player = @players.min_by do |player|
+          player.deck.cards.count
+        end
+        lowest_player.deck.cards.count.times { lowest_player.deck.remove_card }
+      end
     end
   end
 
   def award_spoils(winner)
     if winner == "No Winner"
-      puts "No cards to award!"
+      return "No cards to award!"
     else
       @spoils_of_war.each do |card|
         winner.deck.cards << card
