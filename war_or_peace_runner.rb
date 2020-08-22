@@ -65,10 +65,10 @@ card_deck = Deck.new([card1, card2, card3, card4, card5, card6, card7, card8, ca
 deck_one = []
 deck_two = []
 26.times do
-  selected_card_one = card_deck.cards.shuffle.sample
+  selected_card_one = card_deck.cards.sample
   deck_one << selected_card_one
   card_deck.cards.delete(selected_card_one)
-  selected_card_two = card_deck.cards.shuffle.sample
+  selected_card_two = card_deck.cards.sample
   deck_two << selected_card_two
   card_deck.cards.delete(selected_card_two)
 end
