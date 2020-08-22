@@ -22,6 +22,8 @@ class Turn
         return :war
       end
     elsif @players.any? {|player| player.deck.cards.count >= 1}
+      player1_card1 = @player1.deck.rank_of_card_at(0)
+      player2_card1 = @player2.deck.rank_of_card_at(0)
       if player1_card1 != player2_card1
         return :basic
       else

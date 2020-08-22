@@ -10,14 +10,14 @@ class Game
     @player1.has_lost? || @player2.has_lost?
   end
 
-  def game_winner
+  def final_winner
     if @player1.has_lost?
-      puts "*~*~*~* #{@player2.name} has won the game! *~*~*~*"
+      p "*~*~*~* #{@player2.name} has won the game! *~*~*~*"
     elsif @player2.has_lost?
-      puts "*~*~*~* #{@player1.name} has won the game! *~*~*~*"
+      p "*~*~*~* #{@player1.name} has won the game! *~*~*~*"
     else
       require "pry"; binding.pry
-      pp "Something went wrong"
+      p "Something went wrong"
     end
   end
 

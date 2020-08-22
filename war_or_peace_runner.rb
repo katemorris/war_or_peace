@@ -99,7 +99,7 @@ if ready.upcase == "GO"
       turn.pile_cards
       turn.award_spoils(winner)
       if game.stop_game? == true
-        game.game_winner
+        game.final_winner
         break
       end
     elsif turn.type == :war
@@ -107,20 +107,20 @@ if ready.upcase == "GO"
       turn.pile_cards
       turn.award_spoils(winner)
       if game.stop_game? == true
-        game.game_winner
+        game.final_winner
         break
       end
     elsif turn.type == :mutually_assured_destruction
       puts "Turn #{game.turn_count}: *mutually assured destruction* 6 cards removed from play"
       turn.pile_cards
       if game.stop_game? == true
-        game.game_winner
+        game.final_winner
         break
       end
     else
       turn.pile_cards
       if game.stop_game? == true
-        game.game_winner
+        game.final_winner
         break
       end
     end
