@@ -16,7 +16,6 @@ class Game
     elsif @player2.has_lost?
       p "*~*~*~* #{@player1.name} has won the game! *~*~*~*"
     else
-      require "pry"; binding.pry
       p "Something went wrong"
     end
   end
