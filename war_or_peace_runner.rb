@@ -87,10 +87,10 @@ ready = $stdin.gets.chomp
 
 # Go Time
 if ready.upcase == "GO"
-  game = Game.new
+  game = Game.new(player1, player2)
   game.start
 
-  while game.turn_count < 1000000 && game.stop_game?(player1, player2)
+  while game.turn_count < 1000000
     turn = Turn.new(player1, player2)
     game.turn_count += 1
     winner = turn.winner
@@ -98,24 +98,29 @@ if ready.upcase == "GO"
       puts "Turn #{game.turn_count}: #{winner.name} won 2 cards."
       turn.pile_cards
       turn.award_spoils(winner)
+      if game.stop_game? == true
+        game.game_winner
+        break
+      end
     elsif turn.type == :war
       puts "Turn #{game.turn_count}: WAR - #{winner.name} won 6 cards."
       turn.pile_cards
       turn.award_spoils(winner)
+      if game.stop_game? == true
+        game.game_winner
+        break
+      end
     elsif turn.type == :mutually_assured_destruction
       puts "Turn #{game.turn_count}: *mutually assured destruction* 6 cards removed from play"
       turn.pile_cards
+      if game.stop_game? == true
+        game.game_winner
+        break
+      end
     else
       turn.pile_cards
-      if player1.has_lost?
-        puts "*~*~*~* #{player2.name} has won the game! *~*~*~*"
-        break
-      elsif player2.has_lost?
-        puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
-        break
-      else
-        require "pry"; binding.pry
-        pp "Something went wrong"
+      if game.stop_game? == true
+        game.game_winner
         break
       end
     end

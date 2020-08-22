@@ -3,17 +3,17 @@ require 'minitest/pride'
 require './lib/card'
 
 class CardTest < Minitest::Test
-  def test_setup
+  def setup
     @card = Card.new(:diamond, 'Queen', 12)
   end
 
   def test_it_exists
-    assert_instance_of Card, card
+    assert_instance_of Card, @card
   end
 
   def test_it_has_readable_attributes
-    assert_equal :diamond, card.suit
-    assert_equal 'Queen', card.value
-    assert_equal 12, card.rank
+    assert_equal :diamond, @card.suit
+    assert_equal 'Queen', @card.value
+    assert_equal 12, @card.rank
   end
 end
