@@ -76,9 +76,10 @@ class Turn
     if winner == "No Winner"
       return "No cards to award!"
     else
-      @spoils_of_war.each do |card|
+      @spoils_of_war.shuffle.each do |card|
         winner.deck.cards << card
       end
+      @spoils_of_war = []
     end
   end
 end
