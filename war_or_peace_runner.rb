@@ -90,7 +90,7 @@ if ready.upcase == "GO"
   game = Game.new
   game.start
 
-  while game.turn_count < 1000000 && game.stop_game?(player1, player2) == false
+  while game.turn_count < 1000000 && game.stop_game?(player1, player2)
     turn = Turn.new(player1, player2)
     game.turn_count += 1
     winner = turn.winner
@@ -105,39 +105,24 @@ if ready.upcase == "GO"
     elsif turn.type == :mutually_assured_destruction
       puts "Turn #{game.turn_count}: *mutually assured destruction* 6 cards removed from play"
       turn.pile_cards
-    elsif turn.type == :no_cards
-      # puts "The cards are running low!"
-      turn.pile_cards
-      if player1.has_lost? == true
-        puts "*~*~*~* #{player2.name} has won the game! *~*~*~*"
-        exit(0)
-      elsif player2.has_lost? == true
-        puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
-        exit(0)
-      else
-        require "pry"; binding.pry
-        pp "Something went wrong"
-        exit(0)
-      end
     else
-      if game.stop_game?(player1, player2) == true && player1.has_lost? == true
+      turn.pile_cards
+      if player1.has_lost?
         puts "*~*~*~* #{player2.name} has won the game! *~*~*~*"
-        exit(0)
-      elsif game.stop_game?(player1, player2) == true && player2.has_lost? == true
+        break
+      elsif player2.has_lost?
         puts "*~*~*~* #{player1.name} has won the game! *~*~*~*"
-        exit(0)
+        break
       else
         require "pry"; binding.pry
         pp "Something went wrong"
-        exit(0)
+        break
       end
     end
   end
-  if game.turn_count = 1000000
+  if game.turn_count == 1000000
     puts "---- DRAW ----"
-    exit(0)
   end
 else
   puts "You don't wanna play my game? :( "
-  exit(0)
 end
