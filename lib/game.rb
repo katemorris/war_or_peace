@@ -8,14 +8,10 @@ class Game
   attr_reader :player1, :player2, :card_deck, :deck1, :deck2, :turn
 
   def initialize
-    build_player_decks
-    @player1 = Player.new("Kate", @deck1)
-    @player2 = Player.new("Caryn", @deck2)
-    @turn = Turn.new(@player1, @player2)
     @turn_count = 0
   end
 
-  def card_deck
+  def make_card_deck
     card1 = Card.new(:heart, '2', 2)
     card2 = Card.new(:heart, '3', 3)
     card3 = Card.new(:heart, '4', 4)
@@ -69,12 +65,13 @@ class Game
     card51 = Card.new(:diamond, 'King', 13)
     card52 = Card.new(:diamond, 'Ace', 14)
 
-    card_deck = Deck.new([card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11, card12, card13, card14, card15, card16, card17, card18, card19, card20, card21, card22, card23, card24, card25, card26, card27, card28, card29, card30, card31, card32, card33, card34, card35, card36, card37, card38, card39, card40, card41, card42, card43, card44, card45, card46, card47, card48, card49, card50, card51, card52])
+    @card_deck = Deck.new([card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11, card12, card13, card14, card15, card16, card17, card18, card19, card20, card21, card22, card23, card24, card25, card26, card27, card28, card29, card30, card31, card32, card33, card34, card35, card36, card37, card38, card39, card40, card41, card42, card43, card44, card45, card46, card47, card48, card49, card50, card51, card52])
   end
 
   def build_player_decks
     deck_one = []
     deck_two = []
+    make_card_deck
     26.times do
       selected_card_one = @card_deck.cards.sample
       deck_one << selected_card_one
@@ -88,6 +85,11 @@ class Game
   end
 
   def start
+    build_player_decks
+    @player1 = Player.new("Kate", @deck1)
+    @player2 = Player.new("Caryn", @deck2)
+    @turn = Turn.new(@player1, @player2)
+
     puts "Welcome to War! (or Peace) This game will be played with #{@deck1.cards.count+@deck2.cards.count} cards."
     puts "The players today are #{@player1.name} and #{@player2.name}."
     puts "Type 'GO' to start the game!"
@@ -95,7 +97,7 @@ class Game
     if ready.upcase == "GO"
       go_turn
     else
-      puts "You don't wanna play my game? :( "
+      p "You do not want to play my game? :( "
     end
   end
 
@@ -126,19 +128,15 @@ class Game
 
   def stop_game_check
     if @player1.has_lost? || @player2.has_lost?
-      final_winner
-    end
-  end
-
-  def final_winner
-    if @player1.has_lost?
-      p "*~*~*~* #{@player2.name} has won the game! *~*~*~*"
-      exit(0)
-    elsif @player2.has_lost?
-      p "*~*~*~* #{@player1.name} has won the game! *~*~*~*"
-      exit(0)
-    else
-      p "Something went wrong"
+      if @player1.has_lost?
+        p "*~*~*~* #{@player2.name} has won the game! *~*~*~*"
+        exit(0)
+      elsif @player2.has_lost?
+        p "*~*~*~* #{@player1.name} has won the game! *~*~*~*"
+        exit(0)
+      else
+        p "Something went wrong"
+      end
     end
   end
 
