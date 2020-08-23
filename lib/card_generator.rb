@@ -1,16 +1,15 @@
+require './lib/card'
+
 class CardGenerator
   attr_reader :cards
 
   def initialize(filename)
-    #import filename
-    #read filename
-    #column 1 rank, column 2 suit, column 3 rank
-    @cards = []
-  end
-
-  def make_cards
-    #make card with each data input
-    #put in cards array
+    card_data = open(filename)
+    @cards = File.readlines(filename)
+    @cards.map do |line|
+      Card.new(line[0],":"+line.downcase[1],line[2])
+    end
+    card_data.close
   end
 
 end

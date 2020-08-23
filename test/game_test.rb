@@ -25,16 +25,14 @@ class GameTest < Minitest::Test
 
   def test_building_decks
     game = Game.new
-    game.build_player_decks
 
     assert_equal 26, game.deck1.cards.count
     assert_equal 26, game.deck2.cards.count
 
     game2 = Game.new
-    game2.build_player_decks
 
-    refute_equal game2.deck1, game.deck1
-    refute_equal game2.deck2, game.deck2
+    refute_equal game2.deck1.cards, game.deck1.cards
+    refute_equal game2.deck2.cards, game.deck2.cards
   end
 
   def test_start
@@ -54,18 +52,28 @@ class GameTest < Minitest::Test
   end
 
   def test_turn_loop
+    game = Game.new
+    string_io = StringIO.new
+    string_io.puts 'Go'
+    string_io.rewind
+    $stdin = string_io
+    game.start
+    $stdin = STDIN
 
+    refute_nil game.cards_removed
+    assert game.game_end.include?("Won")
   end
 
   def test_stop_game
-    # skip
     game = Game.new
-
+    game.turn_count = 999999
     string_io = StringIO.new
     string_io.puts 'No'
     string_io.rewind
     $stdin = string_io
     game.start
+
+
     $stdin = STDIN
 
     assert_nil game.stop_game_check
