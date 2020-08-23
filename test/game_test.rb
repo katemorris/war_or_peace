@@ -46,20 +46,19 @@ class GameTest < Minitest::Test
     $stdin = string_io
 
     assert_equal "You do not want to play my game? :( ", game.start
-    $stdin = STDIN
 
-    assert_instance_of Turn, game.turn
     assert_equal "Kate", game.player1.name
     assert_equal 26, game.player1.deck.cards.count
     assert_equal 26, game.player2.deck.cards.count
-
+    $stdin = STDIN
   end
 
   def test_turn_loop
-    skip
+
   end
 
   def test_stop_game
+    # skip
     game = Game.new
 
     string_io = StringIO.new
@@ -67,6 +66,7 @@ class GameTest < Minitest::Test
     string_io.rewind
     $stdin = string_io
     game.start
+    $stdin = STDIN
 
     assert_nil game.stop_game_check
 
@@ -74,8 +74,8 @@ class GameTest < Minitest::Test
 
     assert_equal 0, game.player1.deck.cards.count
     assert_equal true, game.player1.has_lost?
-    assert_equal "*~*~*~* #{game.player2.name} has won the game! *~*~*~*", game.stop_game_check
-    $stdin = STDIN
+    assert_equal "*~*~*~* Caryn has won the game! *~*~*~*", game.stop_game_check
+
   end
 
 end

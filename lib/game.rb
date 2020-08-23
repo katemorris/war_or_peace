@@ -5,7 +5,7 @@ require './lib/turn'
 
 class Game
   attr_accessor :turn_count
-  attr_reader :player1, :player2, :card_deck, :deck1, :deck2, :turn
+  attr_reader :players, :player1, :player2, :card_deck, :deck1, :deck2, :turn
 
   def initialize
     @turn_count = 0
@@ -88,7 +88,7 @@ class Game
     build_player_decks
     @player1 = Player.new("Kate", @deck1)
     @player2 = Player.new("Caryn", @deck2)
-    @turn = Turn.new(@player1, @player2)
+    @players = [player1, player2]
 
     puts "Welcome to War! (or Peace) This game will be played with #{@deck1.cards.count+@deck2.cards.count} cards."
     puts "The players today are #{@player1.name} and #{@player2.name}."
@@ -102,22 +102,20 @@ class Game
   end
 
   def go_turn
+    turn = Turn.new(@player1, @player2)
     while @turn_count < 1000000
       @turn_count += 1
-      winner = @turn.winner
-      if @turn.type == :basic
+      winner = turn.winner
+      type = turn.type
+      turn.pile_cards
+      turn.award_spoils(winner)
+      if type == :basic
         puts "Turn #{turn_count}: #{winner.name} won 2 cards."
-        @turn.pile_cards
-        @turn.award_spoils(winner)
-      elsif @turn.type == :war
+      elsif type == :war
         puts "Turn #{turn_count}: WAR - #{winner.name} won 6 cards."
-        @turn.pile_cards
-        @turn.award_spoils(winner)
-      elsif @turn.type == :mutually_assured_destruction
-        puts "Turn #{self.turn_count}: *mutually assured destruction* 6 cards removed from play"
-        @turn.pile_cards
+      elsif type == :mutually_assured_destruction
+        puts "Turn #{turn_count}: *mutually assured destruction* 6 cards removed from play"
       else
-        @turn.pile_cards
       end
       stop_game_check
     end
@@ -128,15 +126,8 @@ class Game
 
   def stop_game_check
     if @player1.has_lost? || @player2.has_lost?
-      if @player1.has_lost?
-        p "*~*~*~* #{@player2.name} has won the game! *~*~*~*"
-        exit(0)
-      elsif @player2.has_lost?
-        p "*~*~*~* #{@player1.name} has won the game! *~*~*~*"
-        exit(0)
-      else
-        p "Something went wrong"
-      end
+      p "*~*~*~* #{@players.max_by {|player| player.deck.cards.count}.name} has won the game! *~*~*~*"
+      exit(0)
     end
   end
 
