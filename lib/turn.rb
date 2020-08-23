@@ -9,7 +9,7 @@ class Turn
   end
 
   def type
-    if @players.all? { |player| player.deck.cards.count >= 3 }
+    if @players.all? {|player| player.deck.cards.count >= 3}
       player1_card1 = @player1.deck.rank_of_card_at(0)
       player2_card1 = @player2.deck.rank_of_card_at(0)
       player1_card3 = @player1.deck.rank_of_card_at(2)
@@ -35,11 +35,11 @@ class Turn
   end
 
   def winner
-    if self.type == :basic
+    if type == :basic
       @players.max_by do |player|
         player.deck.rank_of_card_at(0)
       end
-    elsif self.type == :war
+    elsif type == :war
       @players.max_by do |player|
         player.deck.rank_of_card_at(2)
       end
@@ -76,9 +76,10 @@ class Turn
     if winner == "No Winner"
       return "No cards to award!"
     else
-      @spoils_of_war.each do |card|
+      @spoils_of_war.shuffle.each do |card|
         winner.deck.cards << card
       end
+      @spoils_of_war = []
     end
   end
 end

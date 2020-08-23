@@ -46,11 +46,9 @@ class TurnTest < Minitest::Test
     refute_equal [], @turn.spoils_of_war
 
     @turn.award_spoils(winner)
-    player1_deck = [@card2, @card5, @card8, @card1, @card3]
-    player2_deck = [@card4, @card6, @card7]
 
-    assert_equal player1_deck, @player1.deck.cards
-    assert_equal player2_deck, @player2.deck.cards
+    assert_equal 5, @player1.deck.cards.count
+    assert_equal 3, @player2.deck.cards.count
   end
 
   def test_war_simulation
@@ -80,11 +78,9 @@ class TurnTest < Minitest::Test
     assert_equal [card1, card4, card2, card3, card5, card6], turn.spoils_of_war
 
     turn.award_spoils(winner)
-    player1_deck = [card8]
-    player2_deck = [card7, card1, card4, card2, card3, card5, card6]
 
-    assert_equal player1_deck, player1.deck.cards
-    assert_equal player2_deck, player2.deck.cards
+    assert_equal 1, player1.deck.cards.count
+    assert_equal 7, player2.deck.cards.count
   end
 
   def test_mutually_assured_destruction
