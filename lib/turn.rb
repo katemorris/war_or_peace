@@ -9,7 +9,7 @@ class Turn
   end
 
   def type
-    if @players.all? { |player| player.deck.cards.count >= 3 }
+    if @players.all? {|player| player.deck.cards.count >= 3}
       player1_card1 = @player1.deck.rank_of_card_at(0)
       player2_card1 = @player2.deck.rank_of_card_at(0)
       player1_card3 = @player1.deck.rank_of_card_at(2)

@@ -2,19 +2,15 @@ require './lib/card'
 require './lib/deck'
 require './lib/player'
 require './lib/turn'
+require './lib/card_generator'
 
 class Game
-  attr_accessor :turn_count, :cards_removed
-  attr_reader :players, :player1, :player2, :card_deck, :deck1, :deck2, :turn, :game_end
+  attr_accessor :turn_count, :deck1,
+  :deck2, :turn, :players, :player1,
+  :player2, :card_deck, :winner
 
   def initialize
     @turn_count = 0
-    build_player_decks
-    @player1 = Player.new("Kate", @deck1)
-    @player2 = Player.new("Caryn", @deck2)
-    @players = [@player1, @player2]
-    @turn = Turn.new(@player1, @player2)
-    @game_end = ""
   end
 
   def make_card_deck
@@ -77,7 +73,9 @@ class Game
   def build_player_decks
     deck_one = []
     deck_two = []
-    make_card_deck
+    filename = "./lib/cards.txt"
+    @card_deck = Deck.new(CardGenerator.new(filename).cards)
+
     26.times do
       selected_card_one = @card_deck.cards.sample
       deck_one << selected_card_one
@@ -90,51 +88,44 @@ class Game
     @deck2 = Deck.new(deck_two.shuffle)
   end
 
-  def start
+  def add_players
+    @player1 = Player.new("Kate", @deck1)
+    @player2 = Player.new("Caryn", @deck2)
+    @players = [@player1, @player2]
+  end
 
-    puts "Welcome to War! (or Peace) This game will be played with #{@deck1.cards.count+@deck2.cards.count} cards."
-    puts "The players today are #{@player1.name} and #{@player2.name}."
-    puts "Type 'GO' to start the game!"
-    ready = $stdin.gets.chomp
-    if ready.upcase == "GO"
-      while @turn_count < 1000000
-        go_turn
-      end
-      if @turn_count == 1000000
-        puts "---- DRAW ----"
-        @game_end = "Won by Draw"
-      end
-    else
-      p "You do not want to play my game? :( "
+  def start
+    while @turn_count < 1000000
+      @turn = Turn.new(@player1, @player2)
+      go_turn
     end
+    p "---- DRAW ----" if @turn_count == 1000000
   end
 
   def go_turn
-    @turn_count += 1
-    winner = @turn.winner
-    type = @turn.type
-    @turn.pile_cards
-    @turn.award_spoils(winner)
-    @cards_removed = 0
-    if type == :basic
-      puts "Turn #{turn_count}: #{winner.name} won 2 cards."
-    elsif type == :war
-      puts "Turn #{turn_count}: WAR - #{winner.name} won 6 cards."
-    elsif type == :mutually_assured_destruction
-      puts "Turn #{turn_count}: *mutually assured destruction* 6 cards removed from play"
-      @cards_removed += 6
+    if @player1.has_lost? || @player2.has_lost?
+      p "*~*~*~* #{@turn.players.max_by {|player| player.deck.cards.count}.name} has won the game! *~*~*~*"
+      exit(0)
     else
+      @turn_count += 1
+      winner = @turn.winner
+      type = @turn.type
+      @turn.pile_cards
+      @turn.award_spoils(winner)
+      if type == :basic
+        p "Turn #{turn_count}: #{winner.name} won 2 cards."
+      elsif type == :war
+        p "Turn #{turn_count}: WAR - #{winner.name} won 6 cards."
+      elsif type == :mutually_assured_destruction
+        p "Turn #{turn_count}: *mutually assured destruction* 6 cards removed from play"
+      else
+        p "No more cards!"
+      end
     end
-    stop_game_check
   end
 
   def stop_game_check
-    if @player1.has_lost? || @player2.has_lost?
-      @turn_count = 1000001
-      @game_end = "Won"
-      p "*~*~*~* #{@players.max_by {|player| player.deck.cards.count}.name} has won the game! *~*~*~*"
 
-    end
   end
 
 end
