@@ -104,8 +104,8 @@ class Game
 
   def go_turn
     if @player1.has_lost? || @player2.has_lost?
+      @turn_count = 1000001
       p "*~*~*~* #{@turn.players.max_by {|player| player.deck.cards.count}.name} has won the game! *~*~*~*"
-      exit(0)
     else
       @turn_count += 1
       winner = @turn.winner
@@ -122,10 +122,6 @@ class Game
         p "No more cards!"
       end
     end
-  end
-
-  def stop_game_check
-
   end
 
 end

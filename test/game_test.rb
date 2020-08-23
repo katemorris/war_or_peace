@@ -139,9 +139,28 @@ class GameTest < Minitest::Test
     assert_equal "Megan", game.turn.winner.name
     assert_equal :basic, game.turn.type
     assert_equal "Turn 1: Megan won 2 cards.", game.go_turn
-    require "pry"; binding.pry
+    # Next turn tests what happens when a player has no cards.
     assert_equal "*~*~*~* Megan has won the game! *~*~*~*", game.go_turn
 
+  end
+
+  def test_turn_not_enough_cards
+    game = Game.new
+
+    card1 = Card.new(:heart, 'Jack', 11)
+    card2 = Card.new(:heart, '10', 10)
+    card3 = Card.new(:spade, 'Jack', 11)
+    game.deck1 = Deck.new([card1, card2])
+    game.deck2 = Deck.new([card3])
+    game.player1 = Player.new("Megan", game.deck1)
+    game.player2 = Player.new("Aurora", game.deck2)
+    game.turn = Turn.new(game.player1, game.player2)
+
+    assert_equal "No Winner", game.turn.winner
+    assert_equal :no_cards, game.turn.type
+    assert_equal "No more cards!", game.go_turn
+    # Next turn checks winner
+    assert_equal "*~*~*~* Megan has won the game! *~*~*~*", game.go_turn
   end
 
 end

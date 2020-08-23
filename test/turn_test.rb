@@ -46,7 +46,7 @@ class TurnTest < Minitest::Test
     refute_equal [], @turn.spoils_of_war
 
     @turn.award_spoils(winner)
-    
+
     assert_equal 5, @player1.deck.cards.count
     assert_equal 3, @player2.deck.cards.count
   end
